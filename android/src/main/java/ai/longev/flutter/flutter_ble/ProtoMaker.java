@@ -15,15 +15,12 @@ import android.bluetooth.BluetoothProfile;
 import android.bluetooth.le.ScanRecord;
 import android.bluetooth.le.ScanResult;
 import android.os.Build;
-import android.os.Parcel;
 import android.os.ParcelUuid;
-import android.util.Log;
 import android.util.SparseArray;
 
 import com.google.protobuf.ByteString;
-import com.pauldemarco.flutterblue.Protos;
 
-import java.util.Iterator;
+
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -39,7 +36,7 @@ public class ProtoMaker {
     static Protos.ScanResult from(BluetoothDevice device, byte[] advertisementData, int rssi) {
         Protos.ScanResult.Builder p = Protos.ScanResult.newBuilder();
         p.setDevice(from(device));
-        if(advertisementData != null && advertisementData.length > 0)
+        if (advertisementData != null && advertisementData.length > 0)
             p.setAdvertisementData(AdvertisementParser.parse(advertisementData));
         p.setRssi(rssi);
         return p.build();
@@ -51,21 +48,21 @@ public class ProtoMaker {
         p.setDevice(from(device));
         Protos.AdvertisementData.Builder a = Protos.AdvertisementData.newBuilder();
         ScanRecord scanRecord = scanResult.getScanRecord();
-        if(Build.VERSION.SDK_INT >= 26) {
+        if (Build.VERSION.SDK_INT >= 26) {
             a.setConnectable(scanResult.isConnectable());
         } else {
-            if(scanRecord != null) {
+            if (scanRecord != null) {
                 int flags = scanRecord.getAdvertiseFlags();
                 a.setConnectable((flags & 0x2) > 0);
             }
         }
-        if(scanRecord != null) {
+        if (scanRecord != null) {
             String deviceName = scanRecord.getDeviceName();
-            if(deviceName != null) {
+            if (deviceName != null) {
                 a.setLocalName(deviceName);
             }
             int txPower = scanRecord.getTxPowerLevel();
-            if(txPower != Integer.MIN_VALUE) {
+            if (txPower != Integer.MIN_VALUE) {
                 a.setTxPowerLevel(Protos.Int32Value.newBuilder().setValue(txPower));
             }
             // Manufacturer Specific Data
@@ -84,7 +81,7 @@ public class ProtoMaker {
             }
             // Service UUIDs
             List<ParcelUuid> serviceUuids = scanRecord.getServiceUuids();
-            if(serviceUuids != null) {
+            if (serviceUuids != null) {
                 for (ParcelUuid s : serviceUuids) {
                     a.addServiceUuids(s.getUuid().toString());
                 }
@@ -99,10 +96,10 @@ public class ProtoMaker {
         Protos.BluetoothDevice.Builder p = Protos.BluetoothDevice.newBuilder();
         p.setRemoteId(device.getAddress());
         String name = device.getName();
-        if(name != null) {
+        if (name != null) {
             p.setName(name);
         }
-        switch(device.getType()){
+        switch (device.getType()) {
             case BluetoothDevice.DEVICE_TYPE_LE:
                 p.setType(Protos.BluetoothDevice.Type.LE);
                 break;
@@ -124,10 +121,10 @@ public class ProtoMaker {
         p.setRemoteId(device.getAddress());
         p.setUuid(service.getUuid().toString());
         p.setIsPrimary(service.getType() == BluetoothGattService.SERVICE_TYPE_PRIMARY);
-        for(BluetoothGattCharacteristic c : service.getCharacteristics()) {
+        for (BluetoothGattCharacteristic c : service.getCharacteristics()) {
             p.addCharacteristics(from(c, gatt));
         }
-        for(BluetoothGattService s : service.getIncludedServices()) {
+        for (BluetoothGattService s : service.getIncludedServices()) {
             p.addIncludedServices(from(device, s, gatt));
         }
         return p.build();
@@ -137,18 +134,18 @@ public class ProtoMaker {
         Protos.BluetoothCharacteristic.Builder p = Protos.BluetoothCharacteristic.newBuilder();
         p.setUuid(characteristic.getUuid().toString());
         p.setProperties(from(characteristic.getProperties()));
-        if(characteristic.getValue() != null)
+        if (characteristic.getValue() != null)
             p.setValue(ByteString.copyFrom(characteristic.getValue()));
-        for(BluetoothGattDescriptor d : characteristic.getDescriptors()) {
+        for (BluetoothGattDescriptor d : characteristic.getDescriptors()) {
             p.addDescriptors(from(d));
         }
-        if(characteristic.getService().getType() == BluetoothGattService.SERVICE_TYPE_PRIMARY) {
+        if (characteristic.getService().getType() == BluetoothGattService.SERVICE_TYPE_PRIMARY) {
             p.setServiceUuid(characteristic.getService().getUuid().toString());
         } else {
             // Reverse search to find service
-            for(BluetoothGattService s : gatt.getServices()) {
-                for(BluetoothGattService ss : s.getIncludedServices()) {
-                    if(ss.getUuid().equals(characteristic.getService().getUuid())){
+            for (BluetoothGattService s : gatt.getServices()) {
+                for (BluetoothGattService ss : s.getIncludedServices()) {
+                    if (ss.getUuid().equals(characteristic.getService().getUuid())) {
                         p.setServiceUuid(s.getUuid().toString());
                         p.setSecondaryServiceUuid(ss.getUuid().toString());
                         break;
@@ -164,7 +161,7 @@ public class ProtoMaker {
         p.setUuid(descriptor.getUuid().toString());
         p.setCharacteristicUuid(descriptor.getCharacteristic().getUuid().toString());
         p.setServiceUuid(descriptor.getCharacteristic().getService().getUuid().toString());
-        if(descriptor.getValue() != null)
+        if (descriptor.getValue() != null)
             p.setValue(ByteString.copyFrom(descriptor.getValue()));
         return p.build();
     }
@@ -186,7 +183,7 @@ public class ProtoMaker {
 
     static Protos.DeviceStateResponse from(BluetoothDevice device, int state) {
         Protos.DeviceStateResponse.Builder p = Protos.DeviceStateResponse.newBuilder();
-        switch(state) {
+        switch (state) {
             case BluetoothProfile.STATE_DISCONNECTING:
                 p.setState(Protos.DeviceStateResponse.BluetoothDeviceState.DISCONNECTING);
                 break;

@@ -310,7 +310,7 @@ class _FlutterBleAppState extends State<FlutterBleApp> {
     return new MaterialApp(
       home: new Scaffold(
         appBar: new AppBar(
-          title: const Text('FlutterBle'),
+          title: const Text('Flutter Longev BLE'),
           actions: _buildActionButtons(),
         ),
         floatingActionButton: _buildScanningButton(),

@@ -4,4 +4,4 @@
 
 part of flutter_ble;
 
-const NAMESPACE = 'plugins.pauldemarco.com/flutter_ble';
+const NAMESPACE = 'ai.longev.flutter/flutter_ble';

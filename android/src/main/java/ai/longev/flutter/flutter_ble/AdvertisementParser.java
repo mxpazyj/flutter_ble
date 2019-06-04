@@ -2,11 +2,11 @@ package ai.longev.flutter.flutter_ble;
 
 
 import com.google.protobuf.ByteString;
-import com.pauldemarco.flutterblue.Protos;
+import ai.longev.flutter.flutter_ble.Protos;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 /**
@@ -47,11 +47,7 @@ class AdvertisementParser {
                     }
                     byte[] name = new byte[length];
                     data.get(name);
-                    try {
-                        ret.setLocalName(new String(name, "UTF-8"));
-                    } catch (UnsupportedEncodingException e) {
-                        throw new RuntimeException(e);
-                    }
+                    ret.setLocalName(new String(name, StandardCharsets.UTF_8));
                     if (type == 0x09) {
                         seenLongLocalName = true;
                     }
@@ -88,11 +84,11 @@ class AdvertisementParser {
                     break;
                 }
                 case 0xFF: {// Manufacturer specific data.
-                    if(length < 2) {
+                    if (length < 2) {
                         throw new ArrayIndexOutOfBoundsException("Not enough data for Manufacturer specific data.");
                     }
                     int manufacturerId = data.getShort();
-                    if((length - 2) > 0) {
+                    if ((length - 2) > 0) {
                         byte[] msd = new byte[length - 2];
                         data.get(msd);
                         ret.putManufacturerData(manufacturerId, ByteString.copyFrom(msd));
