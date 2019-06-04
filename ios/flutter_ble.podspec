@@ -3,7 +3,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'flutter_ble'
-  s.version          = '0.0.1'
+  s.version          = '0.5.1'
   s.summary          = 'A new Flutter plugin.'
   s.description      = <<-DESC
 A new Flutter plugin.
@@ -18,7 +18,7 @@ A new Flutter plugin.
   s.framework = 'CoreBluetooth'
   s.dependency '!ProtoCompiler'
 
-  protoc = ENV['PWD'] + '/ ios/Pods/!ProtoCompiler/protoc'
+  protoc = ENV['PWD'] + '/ios/Pods/!ProtoCompiler/protoc'
     objc_out = 'gen'
     proto_in = '../protos'
     s.prepare_command = <<-CMD
