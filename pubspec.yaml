@@ -4,7 +4,7 @@ version: 0.0.3
 authors:
   - Paul DeMarco <paulmdemarco@gmail.com>
   - Jonathan Andrade <j@longev.ai>
-homepage: https://github.com/ndrd/flutter_blue
+homepage: https://gitlab.longev.ai/open-source/flutter_ble
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
