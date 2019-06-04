@@ -55,7 +55,7 @@ protobuf {
         artifact = 'com.google.protobuf:protoc:3.7.0'
     }
     plugins {
-        javalite {  artifact = 'com.google.protobuf:protoc-gen-javalite:3.0.0' }
+        javalite {  artifact = 'com.google.protobuf:protoc-gen-javalite:3.0.0'}
         grpc { artifact = 'io.grpc:protoc-gen-grpc-java:1.19.0' }
     }
     generateProtoTasks {
@@ -72,6 +72,6 @@ protobuf {
 }
 
 dependencies {
-    implementation 'com.google.protobuf:protobuf-java:3.6.1'
-    implementation 'com.google.protobuf:protoc-gen-javalite:3.0.0'
+    implementation 'com.google.protobuf:protobuf-lite:3.0.1'
+
 }
