@@ -1,6 +1,6 @@
 name: flutter_ble
 description: A new Flutter plugin for Longev.ai.
-version: 0.0.3
+version: 0.5.1
 authors:
   - Paul DeMarco <paulmdemarco@gmail.com>
   - Jonathan Andrade <j@longev.ai>
