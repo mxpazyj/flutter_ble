@@ -37,6 +37,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.pauldemarco.flutterblue.Protos;
 
 import java.util.ArrayList;
 import java.util.HashMap;
