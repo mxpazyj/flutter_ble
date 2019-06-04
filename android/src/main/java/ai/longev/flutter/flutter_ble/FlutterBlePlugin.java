@@ -423,6 +423,28 @@ public class FlutterBlePlugin implements MethodCallHandler, RequestPermissionsRe
                 break;
             }
 
+            case "createBond": {
+                byte[] data = call.arguments();
+                Protos.ConnectRequest options;
+                try {
+                    options = Protos.ConnectRequest.newBuilder().mergeFrom(data).build();
+                } catch (InvalidProtocolBufferException e) {
+                    result.error("RuntimeException", e.getMessage(), e);
+                    break;
+                }
+                String deviceId = options.getRemoteId();
+                BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(deviceId);
+                boolean isConnected = mBluetoothManager.getConnectedDevices(BluetoothProfile.GATT).contains(device);
+                if (mGattServers.containsKey(deviceId) && !isConnected) {
+                    if (device.createBond()) {
+                        result.success(null);
+                    } else {
+                        result.error(" bond error", "create bond error", null);
+                    }
+                }
+                return;
+            }
+
             case "disconnect": {
                 String deviceId = (String) call.arguments;
                 BluetoothGatt gattServer = mGattServers.remove(deviceId);

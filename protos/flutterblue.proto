@@ -8,6 +8,7 @@ option java_package = "ai.longev.flutter.flutter_ble";
 option java_outer_classname = "Protos";
 option objc_class_prefix = "Protos";
 
+
 // Wrapper message for `int32`.
 //
 // Allows for nullability of fields in messages
