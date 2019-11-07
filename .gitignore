@@ -3,5 +3,8 @@
 
 .packages
 .pub/
-
 build/
+.project
+.classpath
+*.idea/
+.setting

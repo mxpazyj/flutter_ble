@@ -168,9 +168,14 @@ public class FlutterBlePlugin implements MethodCallHandler, RequestPermissionsRe
     };
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
         @Override
-        public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+        public void onConnectionStateChange(final BluetoothGatt gatt, int status, final int newState) {
             log(LogLevel.DEBUG, "[onConnectionStateChange] status: " + status + " newState: " + newState);
-            channel.invokeMethod("DeviceState", ProtoMaker.from(gatt.getDevice(), newState).toByteArray());
+            registrar.activity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    channel.invokeMethod("DeviceState", ProtoMaker.from(gatt.getDevice(), newState).toByteArray());
+                }
+            });
         }
 
         @Override
