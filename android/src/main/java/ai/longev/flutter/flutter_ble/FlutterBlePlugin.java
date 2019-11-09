@@ -235,13 +235,13 @@ public class FlutterBlePlugin implements MethodCallHandler, RequestPermissionsRe
 
         @Override
         public void onCharacteristicChanged(final BluetoothGatt gatt, final BluetoothGattCharacteristic characteristic) {
+            log(LogLevel.DEBUG, "[onCharacteristicChanged] uuid: " + characteristic.getUuid().toString());
+            final Protos.OnNotificationResponse.Builder p = Protos.OnNotificationResponse.newBuilder();
+            p.setRemoteId(gatt.getDevice().getAddress());
+            p.setCharacteristic(ProtoMaker.from(characteristic, gatt));
             registrar.activity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    log(LogLevel.DEBUG, "[onCharacteristicChanged] uuid: " + characteristic.getUuid().toString());
-                    Protos.OnNotificationResponse.Builder p = Protos.OnNotificationResponse.newBuilder();
-                    p.setRemoteId(gatt.getDevice().getAddress());
-                    p.setCharacteristic(ProtoMaker.from(characteristic, gatt));
                     channel.invokeMethod("OnValueChanged", p.build().toByteArray());
                 }
             });
